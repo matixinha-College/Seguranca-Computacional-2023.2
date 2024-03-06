@@ -15,8 +15,8 @@ public class BankService {
         this.authService = authService;
     }
 
-    public void handleClient(String string, PrintStream output) {
-        Scanner scanner = new Scanner(string);
+    public void handleClient(BufferedReader input, PrintStream output) {
+        Scanner scanner = new Scanner(input);
 
         boolean authenticated = false;
         BankUser currentUser = null;

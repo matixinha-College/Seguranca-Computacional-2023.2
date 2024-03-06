@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
-import Auth.Crypt.Util;
 import App.BankService;
 
 public class MyServer implements Runnable {
@@ -14,9 +13,8 @@ public class MyServer implements Runnable {
     private Socket socketClient; 
     private static int activeConnections = 0; // número de conexões ativas
     private int clientId; // ID único para cada cliente
-    //private boolean connection = true;
+    private boolean connection = true;
     private BankService bankService;
-    private Util util = new Util();
 
     public MyServer(Socket client, BankService bankService){
         socketClient = client;
@@ -37,20 +35,7 @@ public class MyServer implements Runnable {
             // Cria um PrintStream para enviar dados para o cliente
             PrintStream output = new PrintStream(socketClient.getOutputStream());
 
-            String encryptedMessage = input.readLine();
-
-            if (encryptedMessage != null && encryptedMessage.length() > 0) {
-                // Decifra a mensagem
-                String decryptedMessage = util.DecryptMessage(encryptedMessage);
-            
-                // Imprime a mensagem decifrada
-                System.out.println("Mensagem decifrada: " + decryptedMessage);
-            
-                // Lógica do banco de dados com a mensagem decifrada
-                bankService.handleClient(util.DecryptMessage(input.readLine()), output);
-            } else {
-                System.out.println("Mensagem recebida vazia ou inválida.");
-            }
+            bankService.handleClient(input, output);
 
             // Fecha os fluxos de entrada e saída e o socket
             input.close();
@@ -60,7 +45,7 @@ public class MyServer implements Runnable {
             // Decrementa o número de conexões ativas
             activeConnections--;
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
