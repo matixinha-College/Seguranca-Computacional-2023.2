@@ -1,33 +1,30 @@
 package Server;
 
-import java.net.InetAddress;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import App.BankService;
+import Auth.AuthenticationService;
 
 public class MainServer {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) {
+        try {
+            ServerSocket serverSocket = new ServerSocket(12345);
+            System.out.println("Servidor iniciado. Aguardando conexões...");
+            AuthenticationService authService = new AuthenticationService();
+            BankService bankService = new BankService(authService);
 
-        //Cria um socket na porta 12345
-        ServerSocket serverSocket = new ServerSocket(12345);
+            while (true) {
+                Socket socket = serverSocket.accept();
+                System.out.println("Novo cliente conectado: " + socket.getInetAddress());
 
-        System.out.println("\nServer port: " + serverSocket.getLocalPort());
-        System.out.println("HostAddress: " + InetAddress.getLocalHost().getHostAddress());
-        System.out.println("HostName: " + InetAddress.getLocalHost().getHostName());
-
-        System.out.println("\nAguardando conexão do cliente");
-    
-        while(true){
-            Socket client = serverSocket.accept();
-            
-            //Cria uma thread do servidor para tratar a conexão
-            MyServer server = new MyServer(client);
-            Thread t = new Thread(server);
-
-            //Inicia a thread para o client conectado
-            t.start();
+                Thread t = new Thread(new MyServer(socket, bankService));
+                t.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
 }
