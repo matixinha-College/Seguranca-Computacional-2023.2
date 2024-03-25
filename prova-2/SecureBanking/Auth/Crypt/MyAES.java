@@ -43,8 +43,9 @@ public class MyAES {
             cifrador.init(Cipher.ENCRYPT_MODE, chave);
             bytesMensagemCifrada = cifrador.doFinal(textoAberto.getBytes());
             mensagemCifrada = Base64.getEncoder().encodeToString(bytesMensagemCifrada);
-            System.out.println(">> Mensagem cifrada = " + mensagemCifrada);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            //System.out.println(">> Mensagem cifrada = " + mensagemCifrada);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
+                | BadPaddingException e) {
             e.printStackTrace();
         }
         return mensagemCifrada;
@@ -59,8 +60,9 @@ public class MyAES {
             decriptador.init(Cipher.DECRYPT_MODE, chave);
             byte[] bytesMensagemDecifrada = decriptador.doFinal(bytesMensagemCifrada);
             mensagemDecifrada = new String(bytesMensagemDecifrada);
-            System.out.println("<< Mensagem decifrada = " + mensagemDecifrada);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            //System.out.println("<< Mensagem decifrada = " + mensagemDecifrada);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
+                | BadPaddingException e) {
             e.printStackTrace();
         }
         return mensagemDecifrada;

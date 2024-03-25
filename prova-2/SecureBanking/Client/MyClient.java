@@ -1,40 +1,44 @@
 package Client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Scanner;
 
 import Auth.Crypt.Util;
 
 public class MyClient implements Runnable {
 
     private Socket client;
-    private boolean connected = true;
-    private Util util = new Util();
+    private boolean connection = true;
+    private int clientId;
 
     public MyClient(Socket socket) {
         this.client = socket;
+        this.clientId = clientId + 1;
     }
 
     @Override
     public void run() {
         try {
-            BufferedReader input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            Scanner consoleInput = new Scanner(System.in);
             PrintStream output = new PrintStream(client.getOutputStream());
 
-            // Thread para lidar com a entrada do usuário no console
+            if (connection) {
+                System.out.println("Conexão estabelecida com sucesso!");
+            }
+
             Thread consoleInputThread = new Thread(() -> {
                 try {
-                    BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in));
                     String userInput;
-                    while (connected && (userInput = consoleInput.readLine()) != null) {
-                        // Criptografa a mensagem com Base64
-                        String messageEncryptedString = util.EncryptMessage(userInput);
-
-                        // Envia a mensagem criptografada para o servidor
-                        output.println(messageEncryptedString);
+                    while (connection && consoleInput.hasNextLine()) {
+                        userInput = consoleInput.nextLine();
+                        if (userInput.equalsIgnoreCase("f")) {
+                            connection = false;
+                        }
+                        // Cifrar a mensagem antes de enviá-la
+                        String encryptedMessage = Util.EncryptMessage(userInput);
+                        output.println(encryptedMessage);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -42,23 +46,20 @@ public class MyClient implements Runnable {
             });
             consoleInputThread.start();
 
-            while (connected) {
-                // Lê a mensagem do servidor
-                String serverResponse = input.readLine();
-
-                // Verifica se o servidor encerrou a conexão
+            Scanner serverInput = new Scanner(client.getInputStream());
+            while (connection && serverInput.hasNextLine()) {
+                String serverResponse = serverInput.nextLine();
                 if (serverResponse == null || serverResponse.equals("Desconectando-se...")) {
-                    connected = false;
+                    connection = false;
                     break;
                 }
-                System.out.println(serverResponse);
+                //System.out.println(serverResponse);
             }
 
-            // Fecha os fluxos de entrada e saída e o socket
-            input.close();
-            output.close();
+            consoleInput.close();
+            serverInput.close();
             client.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

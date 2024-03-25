@@ -1,30 +1,33 @@
 package App;
 
+import java.math.BigInteger;
+
 public class BankUser {
 
-    private String accountNumber;
+    private int accountNumber;
     private String password;
-    private String cpf;
+    private long cpf;
     private String nome;
     private String endereco;
-    private String telefone;
+    private int telefone;
     private double saldoConta;
     private double saldoPoupanca;
     private double saldoRendaFixa;
 
-    public BankUser(String password, String cpf, String nome, String endereco, String telefone, double saldoConta, double saldoPoupanca, double saldoRendaFixa) {
-        this.accountNumber = generateAccountNumber();
+    public BankUser(int accountNumber, String password, long l, String nome, String endereco, int telefone,
+            double saldoConta, double saldoPoupanca, double saldoRendaFixa) {
+        this.accountNumber = accountNumber;
         this.password = password;
-        this.cpf = cpf;
+        this.cpf = l;
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
-        this.saldoConta = 0.0;
-        this.saldoPoupanca = 0.005;
+        this.saldoConta = saldoConta;
+        this.saldoPoupanca = 0.005 * saldoConta;
         this.saldoRendaFixa = 0.0;
     }
 
-    public String getAccountNumber() {
+    public int getAccountNumber() {
         return accountNumber;
     }
 
@@ -32,7 +35,7 @@ public class BankUser {
         return password;
     }
 
-    public String getCpf() {
+    public long getCpf() {
         return cpf;
     }
 
@@ -44,11 +47,11 @@ public class BankUser {
         return endereco;
     }
 
-    public String getTelefone() {
+    public int getTelefone() {
         return telefone;
     }
 
-    public void setAccountNumber(String accountNumber) {
+    public void setAccountNumber(int accountNumber) {
         this.accountNumber = accountNumber;
     }
 
@@ -56,7 +59,7 @@ public class BankUser {
         this.password = password;
     }
 
-    public void setCpf(String cpf) {
+    public void setCpf(long cpf) {
         this.cpf = cpf;
     }
 
@@ -68,7 +71,7 @@ public class BankUser {
         this.endereco = endereco;
     }
 
-    public void setTelefone(String telefone) {
+    public void setTelefone(int telefone) {
         this.telefone = telefone;
     }
 

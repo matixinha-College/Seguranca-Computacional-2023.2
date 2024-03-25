@@ -13,4 +13,3 @@ public class MyBase64 {
         return new String(bytesMsgBase64);
     }
 }
-
