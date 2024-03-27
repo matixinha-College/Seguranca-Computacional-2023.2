@@ -2,9 +2,11 @@ package Client;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.util.Scanner;
 
+import Auth.Crypt.MyRSA;
 import Auth.Crypt.Util;
 
 public class MyClient implements Runnable {
@@ -12,10 +14,17 @@ public class MyClient implements Runnable {
     private Socket client;
     private boolean connection = true;
     private int clientId;
+    private MyRSA rsa = new MyRSA();
+    private int seed;
+    private BigInteger PublicKey;
+    private BigInteger PrivateKey;
+    private BigInteger Modulus;
 
     public MyClient(Socket socket) {
         this.client = socket;
-        this.clientId = clientId + 1;
+        this.seed = clientId;
+        this.PublicKey = rsa.getPublicKey();
+        this.PrivateKey = rsa.getPrivateKey();
     }
 
     @Override
@@ -26,6 +35,8 @@ public class MyClient implements Runnable {
 
             if (connection) {
                 System.out.println("Conexão estabelecida com sucesso!");
+                output.println(PublicKey);
+                output.println(seed);
             }
 
             Thread consoleInputThread = new Thread(() -> {

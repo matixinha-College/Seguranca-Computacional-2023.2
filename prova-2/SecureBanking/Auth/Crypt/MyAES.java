@@ -16,13 +16,17 @@ public class MyAES {
     private SecretKey chave;
 
     public MyAES() {
-        gerarChave();
+        gerarChave(0);
     }
 
-    public void gerarChave() {
+    public SecretKey getChave() {
+        return chave;
+    }
+
+    public void gerarChave(int seed) {
         // Definir uma semente fixa para o gerador de números aleatórios
         SecureRandom secureRandom = new SecureRandom();
-        secureRandom.setSeed(06032024); // Semente fixa para gerar a mesma chave sempre
+        secureRandom.setSeed(seed); // Semente fixa para gerar a mesma chave sempre
 
         try {
             KeyGenerator geradorDeChaves = KeyGenerator.getInstance("AES");

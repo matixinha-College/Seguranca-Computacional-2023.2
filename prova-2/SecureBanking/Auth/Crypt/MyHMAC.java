@@ -3,9 +3,14 @@ package Auth.Crypt;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 
 public class MyHMAC {
     public static final String ALG = "HmacSHA256";
+
+    //secure random for the key
+    //generate random secure key
+    
 
     public static String hMac(String chave, String mensagem) {
         try {
